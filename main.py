@@ -10,16 +10,23 @@ class Graph:
         for i in range(self.total_vertexs):
             vertex = {
                 'value': i,
-                'neighbors': []
+                'neighbors': [],
+                'clicked': False,
+                'axis_x': 0,
+                'axis_y': 0
             } 
-            self.vertexs.append(vertex)
+
+            
+
+
+        self.vertexs.append(vertex)
 
     def connect_egde(self, origin, destiny): #graph bidirected
         self.vertexs[origin]['neighbors'].append(destiny)
         self.vertexs[destiny]['neighbors'].append(origin)
     
     def print_grid(self):
-        for i in range(self.total_vertexs):
+        for i in range(self.total_vertexs): 
             print('{:02d}'.format(self.vertexs[i]['value']), ' ', end="")
             if i == 4 or i == 9 or i == 14:
                 print('\n')
