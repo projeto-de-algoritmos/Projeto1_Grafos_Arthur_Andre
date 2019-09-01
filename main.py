@@ -1,41 +1,50 @@
 from random import randint
+from game import *
+x_inicial = 160
+y_inicial = 150
 
 class Graph:
-    
+
     vertexs = []
 
     def __init__(self):
         pass
-    def create(self, lines, columns, axis):
-        self.total_vertexs = lines * columns
 
-        for i in range(self.total_vertexs):
-            vertex = {
-                'value': i,
-                'neighbors': [],
-                'clicked': False,
-                'axis_x': 0,
-                'axis_y': 0
-            } 
+    def create(self,lines, column):
+        self.total_vertexs = lines * column
+
+        valor_x = x_inicial
+        valor_y = y_inicial
+        for y in range(lines):
+            for x in range(lines):
+                vertex = {
+                    'value': i,
+                    'neighbors': [],
+                    'clicked': False,
+                    'axis': [valor_x,valor_y]
+                    
+                }
+                valor_x += 84
+            valor_y += 75
 
         self.vertexs.append(vertex)
 
-    def connect_egde(self, origin, destiny): #graph bidirected 
-        self.vertexs[origin]['neighbors'].append(destiny)
-        self.vertexs[destiny]['neighbors'].append(origin)
-    
+        def connect_egde(self, origin, destiny):  # graph bidirected
+            self.vertexs[origin]['neighbors'].append(destiny)
+            self.vertexs[destiny]['neighbors'].append(origin)
+
     def get_vertex(self):
         return self.total_vertexs
 
-	def get_vertexs_value(self):
-		values = []
-		for vertex in self.vertexs:
-			values.append(vertex['value'])
+    def get_vertexs_value(self):
+        values = []
+        for vertex in self.vertexs:
+            values.append(vertex[axis])
 
-		return values
-    
+        return values
+
     def print_grid(self):
-        for i in range(self.total_vertexs): 
+        for i in range(self.total_vertexs):
             print('{:02d}'.format(self.vertexs[i]['value']), ' ', end="")
             if i == 4 or i == 9 or i == 14:
                 print('\n')
@@ -50,32 +59,6 @@ class Graph:
                 print('\n')
 
         print('\n')
-
-
-class Game:
-
-    def __init__(self):
-        pass
-
-    def machine_action_easy(self, total_vertex, clicked):
-        vertex = randint(0, total_vertex)
-
-        if not clicked:
-
-
-
-
-
-
-grafo = Graph()
-grafo.create(5, 4, [])
-# grafo.print_grid()
-# grafo.connect_egde(4, 5)
-# grafo.connect_egde(4, 3)
-# grafo.connect_egde(4, 8)
-# grafo.connect_egde(8, 3)
-
-# grafo.print_list()
-
-g = Game()
-g.machine_action_easy(grafo.get_vertex(), clicked)
+    create(4,4)
+    print(get_vertexs_value(vertexs))
+Game(True)

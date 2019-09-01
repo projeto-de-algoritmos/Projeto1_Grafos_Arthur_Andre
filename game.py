@@ -89,4 +89,3 @@ def Game(start):
         frame.tick(25)
 
 
-Game(start)
