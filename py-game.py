@@ -34,23 +34,28 @@ pygame.display.set_caption('Dots & Boxes')
 screen.fill(BLACK)
 
 ## desenhando na superficie 
-if contador == 0:
-    print "entra aqui"
-    # arestas horizontais
-    for y in range(0,300,75):
-        for x in range(0,500,84):
-            pygame.draw.rect(screen, GRAY, [y+260, x+40, 60, 5])
-    
-    #vértices
-    for y in range(0,375,75):
-        for x in range(0,504,84): 
-            pygame.draw.ellipse(screen, WHITE, [y+245, x+35, 15, 15])
-    
-    for y in range(0,375,75):
-        for x in range(0,420,84):
-            pygame.draw.rect(screen, GRAY, [y+250, x+50, 5, 70])
 
-contador = contador + 1
+# arestas horizontais
+for y in range(0,300,75):
+    for x in range(0,500,84):
+        pygame.draw.rect(screen, GRAY, [y+260, x+40, 60, 5])
+
+#vértices
+for y in range(0,375,75):
+    for x in range(0,504,84): 
+        pygame.draw.ellipse(screen, WHITE, [y+245, x+35, 15, 15])
+
+for y in range(0,375,75):
+    for x in range(0,420,84):
+        pygame.draw.rect(screen, GRAY, [y+250, x+50, 5, 70])
+
+
+def collor(play):
+    pygame.draw.rect(screen, BLUE, [play['axis'][0], play['axis'][1], play['k'], play['t']])
+    
+
+
+
 #arestas verticaiscapturando eventos
 while sair:
     for event in pygame.event.get():
@@ -94,6 +99,8 @@ while sair:
                 else:
                     print('ja esta conectado')
                     continue  
+            # else:
+            #     continue
                 
            #horizontal second line
 
@@ -443,20 +450,16 @@ while sair:
 
 
             #time.sleep(3)
-            play = bot.machine_action_easy(graph.get_vertexs())
-            print(play[0], ' -> ', play[1])
-            if not graph.is_connected(play[0], play[1]):
-                graph.connect_egde(play[0], play[1])
-                
-            else:
-                while True:
-                    play = bot.machine_action_easy(graph.get_vertexs())
-                    print(play[0], ' **-> ', play[1])
-                    if graph.is_connected(play[0], play[1]):
-                        continue
-                    else:
-                        graph.connect_egde(play[0], play[1])
-                        break
+          
+            while True:
+                play = bot.machine_action_easy(graph.get_vertexs())
+                print(play['vertexs'][0], ' **-> ', play['vertexs'][1])
+                if graph.is_connected(play['vertexs'][0], play['vertexs'][1]):
+                    continue
+                else:
+                    graph.connect_egde(play['vertexs'][0], play['vertexs'][1])
+                    collor(play)
+                    break
                     
 
     

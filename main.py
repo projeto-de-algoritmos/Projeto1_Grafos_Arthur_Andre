@@ -61,6 +61,7 @@ class Graph:
                 if element == destiny:
                     return True
         return False
+
     
     def print_grid(self):
         for i in range(self.total_vertexs): 
