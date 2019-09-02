@@ -3,6 +3,7 @@ from random import randint
 class Graph:
     
     vertexs = []
+    plays = 0
 
     def __init__(self):
         pass
@@ -15,7 +16,7 @@ class Graph:
                 'neighbors': [],
                 'clicked': False,
                 'axis_x': 0,
-                'axis_y': 0,
+                'axis_y': 0
             } 
             
             self.vertexs.append(vertex)
@@ -24,6 +25,7 @@ class Graph:
     def connect_egde(self, origin, destiny): #graph bidirected 
         self.vertexs[origin]['neighbors'].append(destiny)
         self.vertexs[destiny]['neighbors'].append(origin)
+        self.plays = self.plays + 1
     
     def get_vertexs(self):
         return self.vertexs
@@ -75,14 +77,12 @@ class Game:
 
     def machine_action_easy(self, vertexs):
         random = randint(0, len(self.plays) - 1)
-        print(random)
-        return self.plays[random], random 
+        return self.plays[random] 
 
         if not connected:
             pass
-    
-    def random(self):
-        return self.random
+
+
 
 
 
