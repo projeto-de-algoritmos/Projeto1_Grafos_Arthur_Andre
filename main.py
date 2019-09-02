@@ -1,27 +1,42 @@
 from random import randint
 
+x_inicial = 150
+y_inicial = 50
+
 class Graph:
-    
+
     vertexs = []
     plays = 0
 
     def __init__(self):
         pass
-    def create(self, lines, columns, axis):
+    def create(self, lines, columns):
         self.total_vertexs = lines * columns
 
-        for i in range(self.total_vertexs):
-            vertex = {
-                'value': i,
-                'neighbors': [],
-                'clicked': False,
-                'axis_x': 0,
-                'axis_y': 0
-            } 
-            
+        valor_x = x_inicial
+        valor_y = y_inicial
+        for y in range(0,(lines+1)*75,75):
+            for x in range(0,lines*84,84):
+                vertex = {
+                    'value': 0,
+                    'neighbors': [],
+                    'clicked': False,
+                    'axis': [x,y]
+                }
+                
+                self.vertexs.append(vertex)
             self.vertexs.append(vertex)
-               
-
+        for x in range(0,(lines)*75,75):  
+            for y in range(0,(lines+1)*84,84):
+                vertex = {
+                    'value': 1,
+                    'neighbors': [],
+                    'clicked': False,
+                    'axis': [y,x]
+                }
+                self.vertexs.append(vertex)
+            self.vertexs.append(vertex)   
+                
     def connect_egde(self, origin, destiny): #graph bidirected 
         self.vertexs[origin]['neighbors'].append(destiny)
         self.vertexs[destiny]['neighbors'].append(origin)
@@ -33,12 +48,12 @@ class Graph:
     def get_vertex_count(self):
         return self.total_vertexs
 
-	def get_vertexs_value(self):
-		values = []
-		for vertex in self.vertexs:
-			values.append(vertex['value'])
+    def get_vertexs_value(self):
+        values = []
+        for vertex in self.vertexs:
+	        values.append(vertex['axis'])
 
-		return values
+        return values
 
     def is_connected(self, origin, destiny):
         if not self.vertexs[origin]['neighbors'] == []:
@@ -69,7 +84,7 @@ class Game:
 
 
     plays = [[0,1], [1,2], [2,3], [3,4], [5,6], [6,7], [7,8], [8,9], [10,11], [11,12], [12,13], [13,14], [15,16], [16,17], [17,18], [18,19], [20,21], [21,22], [22,23], [23,24], [25,26], [26,27], [27,28], [28,29], [0,5], [5,10], [10,15], [15,20], [20,25], [1,6], [6,11], [11,16], [16,21], [21,26], [2,7], [7,12], [12,17], [17,22], [22,27], [3,8], [8,13], [13,18], [18,23], [23,28], [4,9], [9,14], [14,19], [19,24], [24,29]]
-    print("tamanho lista: ", len(plays))
+    #print("tamanho lista: ", len(plays))
     
     def __init__(self):
         pass
@@ -84,13 +99,6 @@ class Game:
 
 
 
-
-
-
-
-
-# grafo = Graph()
-# grafo.create(5, 4, [])
 # grafo.print_grid()
 # grafo.connect_egde(4, 5)
 # grafo.connect_egde(4, 3)

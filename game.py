@@ -1,6 +1,8 @@
 import time
-
+from main import *
 import pygame
+
+
 start = True
 # definindo cores
 BLACK = (0, 0, 0)
@@ -26,21 +28,30 @@ def valida_click(x,y,posicao_x,posicao_y):
     if x <= posicao_x and x>= posicao_x+ 60 and posicao_y <= y and y<= posicao_y +5:
         clicks.append([x,y])
         print(clicks)
-def tabuleiro(posicao_x,posicao_y):
-     #horizontal
-        for y in range(0,300,75):
-            for x in range(0,500,84):
-                pygame.draw.rect(screen, GRAY ,[y+160, x+40, 60, 5])
-                valida_click(x,y,posicao_x,posicao_y)
-        for y in range(0,375,75):
-            for x in range(0,504,84):
+def tabuleiro(posicao_x,posicao_y,grafo):
+    
+        for vertex in grafo.vertexs:
+            x,y =vertex['axis']
+            bit=vertex['value']
+            if vertex['clicked'] == True:
+                color = RED
+            else:
+                color = GRAY
+           
+            if bit == 0:
+                pygame.draw.rect(screen, color ,[x+160, y+40, 70, 5])
+                if posicao_x >= x+160 and posicao_x <= x+160+70 and posicao_y >= y+40 and posicao_y<= y+40+5:
+                    vertex['clicked']= True
                 
-                pygame.draw.ellipse(screen, NAVY, [y+145, x+35, 15, 15])
-        #vertical
-        for y in range(0,375,75):
-            for x in range(0,420,84):
-                pygame.draw.rect(screen, GRAY, [y+150, x+50, 5, 70])
-                valida_click(x,y,posicao_x,posicao_y)
+            else:
+                pygame.draw.rect(screen, color ,[x+150, y+50, 5, 60])
+                if posicao_x >= x+150 and posicao_x <= x+150+5 and posicao_y >= y+50 and posicao_y<= y+50+60:
+                    vertex['clicked']= True
+           
+        for y in range(0,450,75):
+            for x in range(0,504,84):
+                pygame.draw.ellipse(screen, NAVY, [x+145, y+35, 15, 15])
+  
 #menu
 def menu():
     # preenchendo o fundo
@@ -50,7 +61,7 @@ def menu():
     text = font.render('Play Game', True, WHITE)
     # copiando o texto para a superfície
     screen.blit(text, [display_x/2-100, display_y/2])
-def Game(start):
+def Game(start,grafo):
     sair = True
     while sair:
         # PROCESSAMENTO DE ENTRADA
@@ -78,7 +89,7 @@ def Game(start):
         if(start and mouse_x >= display_x/2-100 and mouse_x <= display_x/2-100+200 and mouse_y >= display_y/2 and mouse_y <= display_y/2+40 ):
             start = False
         if(not(start)):
-            tabuleiro(mouse_x,mouse_y)
+            tabuleiro(mouse_x,mouse_y,grafo)
             
         # atualizando a tela
         
@@ -89,3 +100,9 @@ def Game(start):
         frame.tick(25)
 
 
+#instanciando classes
+
+grafo = Graph()
+grafo.create(5, 4)
+print(grafo.get_vertexs_value())
+Game(True,grafo)
