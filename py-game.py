@@ -3,6 +3,7 @@ import time
 import pygame
 from main import Graph, Game
 import time
+import sys
 
 # definindo cores
 BLACK = (0, 0, 0)
@@ -18,12 +19,12 @@ sair = True
 frame = pygame.time.Clock()
 
 graph = Graph()
-graph.create(6, 5, 0)
+graph.create(5, 5)
 bot = Game()
 
 
 # PROCESSAMENTO DE ENTRADA
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((640, 480))
 contador = 0
 # carregando fonte
 font = pygame.font.SysFont(None, 55)
@@ -36,26 +37,41 @@ screen.fill(BLACK)
 ## desenhando na superficie 
 
 # arestas horizontais
+# for y in range(0,300,75):
+#     for x in range(0,500,84):
+#         pygame.draw.rect(screen, GRAY, [y+260, x+40, 60, 5])
+
+#vértices
 for y in range(0,300,75):
-    for x in range(0,500,84):
-        pygame.draw.rect(screen, GRAY, [y+260, x+40, 60, 5])
+    for x in range(0,416,84):
+        pygame.draw.rect(screen, GRAY, [y+160, x+40, 60, 5])
 
 #vértices
 for y in range(0,375,75):
-    for x in range(0,504,84): 
-        pygame.draw.ellipse(screen, WHITE, [y+245, x+35, 15, 15])
+    for x in range(0,420,84): 
+        pygame.draw.ellipse(screen, WHITE, [y+145, x+35, 15, 15])
 
 for y in range(0,375,75):
-    for x in range(0,420,84):
-        pygame.draw.rect(screen, GRAY, [y+250, x+50, 5, 70])
+    for x in range(0,336,84):
+        pygame.draw.rect(screen, GRAY, [y+150, x+50, 5, 70])
 
 
-def collor(play):
-    pygame.draw.rect(screen, BLUE, [play['axis'][0], play['axis'][1], play['k'], play['t']])
+def collor(aux):
     
+    if aux['orientation'] == 'horizontal':
+        x = aux['axis'][0]
+        y = aux['axis'][1]
+        pygame.draw.rect(screen, RED ,[x+160, y+40, 70,5])
+    
+    else:
+        x = aux['axis'][0]
+        y = aux['axis'][1]
+        pygame.draw.rect(screen, RED ,[x+150, y+50, 5, 60])
 
 
-
+    
+repeat = False
+bots_turn = False
 #arestas verticaiscapturando eventos
 while sair:
     for event in pygame.event.get():
@@ -65,414 +81,105 @@ while sair:
             sair = False
 
         if event.type == pygame.MOUSEBUTTONDOWN:            
-            
+            repeat = False
+            bots_turn = False
             mx, my = pygame.mouse.get_pos()
-            print('(', mx, ') (', my, ')') #337
+            #print('(', mx, ') (', my, ')') #337
+            for vertex in graph.get_vertexs():
+                x_r = vertex['axis']['right'][0]
+                y_r = vertex['axis']['right'][1]
+                x_d = vertex['axis']['down'][0]
+                y_d = vertex['axis']['down'][1]
 
-            #horizontal first line
-            
-            if mx >= 262 and mx <= 315 and my >= 32 and my <= 50: 
-                if not graph.is_connected(0, 1):
-                    graph.connect_egde(0, 1)
-                    pygame.draw.rect(screen, RED, [260, 40, 60, 5]) 
-                else:
-                    print('ja esta conectado')
-                    continue         
-            elif mx >= 337 and mx <= 390 and my >= 32 and my <= 50:
-                if not graph.is_connected(1, 2):
-                    graph.connect_egde(1, 2)
-                    pygame.draw.rect(screen, RED, [335, 40, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 412 and mx <= 465 and my >= 32 and my <= 50:
-                if not graph.is_connected(2, 3):
-                    graph.connect_egde(2, 3)
-                    pygame.draw.rect(screen, RED, [410, 40, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue      
-            elif mx >= 487 and mx <= 540 and my >= 32 and my <= 50:
-                if not graph.is_connected(3, 4):
-                    graph.connect_egde(3, 4)
-                    pygame.draw.rect(screen, RED, [485, 40, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            # else:
-            #     continue
+                        
+                if mx >= x_r+160 and mx <= x_r+160+70 and my >= y_r+40 and my<= y_r+40+5: 
+                    #se os vertices ja tiverem conectados, o jogador tem que jogar de novo
+                    if graph.is_connected(vertex['value'], vertex['value'] + 1):
+                        print('repeat')
+                        repeat = True
+                        break
+                    repeat = False
+                    
+                    #print(vertex)
+                    #aqui verifica se o vertice em questao é o ultimo da direita, se nao for o ultimo ainda tem um vertice a direita onde pode ser conectado
+                    # if vertex['value'] != graph.get_columns() - 1:
+                    graph.connect_egde(vertex['value'], vertex['value'] + 1)
+                    pygame.draw.rect(screen, BLUE ,[x_r+160, y_d+40, 60,5])
+                    bots_turn = True
                 
-           #horizontal second line
-
-            if mx >= 262 and mx <= 315 and my >= 116 and my <= 134:
-                if not graph.is_connected(5, 6):
-                    graph.connect_egde(5, 6)
-                    pygame.draw.rect(screen, RED, [260, 124, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 337 and mx <= 390 and my >= 116 and my <= 134:
-                if not graph.is_connected(6, 7):
-                    graph.connect_egde(6, 7)
-                    pygame.draw.rect(screen, RED, [335, 124, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 412 and mx <= 465 and my >= 116 and my <= 134:
-                if not graph.is_connected(7, 8):
-                    graph.connect_egde(7, 8)
-                    pygame.draw.rect(screen, RED, [410, 124, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 487 and mx <= 540 and my >= 116 and my <= 134:
-                if not graph.is_connected(8, 9):
-                    graph.connect_egde(8, 9)
-                    pygame.draw.rect(screen, RED, [485, 124, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-
-            #horizontal third line
-
-            if mx >= 262 and mx <= 315 and my >= 200 and my <= 218:
-                if not graph.is_connected(10, 11):
-                    graph.connect_egde(10, 11)
-                    pygame.draw.rect(screen, RED, [260, 208, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 337 and mx <= 390 and my >= 200 and my <= 218:
-                if not graph.is_connected(11, 12):
-                    graph.connect_egde(11, 12)
-                    pygame.draw.rect(screen, RED, [335, 208, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 412 and mx <= 465 and my >= 200 and my <= 218:
-                if not graph.is_connected(12, 13):
-                    graph.connect_egde(12, 13)
-                    pygame.draw.rect(screen, RED, [410, 208, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 487 and mx <= 540 and my >= 200 and my <= 218:
-                if not graph.is_connected(13, 14):
-                    graph.connect_egde(13, 14)
-                    pygame.draw.rect(screen, RED, [485, 208, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            
-            
-
-            #horizontal fourty line
-
-            if mx >= 262 and mx <= 315 and my >= 284 and my <= 300:
-                if not graph.is_connected(15, 16):
-                    graph.connect_egde(15, 16)
-                    pygame.draw.rect(screen, RED, [260, 292, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 337 and mx <= 390 and my >= 284 and my <= 300:
-                if not graph.is_connected(16, 17):
-                    graph.connect_egde(16, 17)
-                    pygame.draw.rect(screen, RED, [335, 292, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 412 and mx <= 465 and my >= 284 and my <= 300:
-                if not graph.is_connected(17, 18):
-                    graph.connect_egde(17, 18)
-                    pygame.draw.rect(screen, RED, [410, 292, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 487 and mx <= 540 and my >= 284 and my <= 300:
-                if not graph.is_connected(18, 19):
-                    graph.connect_egde(18, 19)
-                    pygame.draw.rect(screen, RED, [485, 292, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-
-            #horizontal fifty line
-
-            if mx >= 262 and mx <= 315 and my >= 368 and my <= 386:
-                if not graph.is_connected(20, 21):
-                    graph.connect_egde(20, 21)
-                    pygame.draw.rect(screen, RED, [260, 376, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 337 and mx <= 390 and my >= 368 and my <= 386:
-                if not graph.is_connected(21, 22):
-                    graph.connect_egde(21, 22)
-                    pygame.draw.rect(screen, RED, [335, 376, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 412 and mx <= 465 and my >= 368 and my <= 386:
-                if not graph.is_connected(22, 23):
-                    graph.connect_egde(22, 23)
-                    pygame.draw.rect(screen, RED, [410, 376, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 487 and mx <= 540 and my >= 368 and my <= 386:
-                if not graph.is_connected(23, 24):
-                    graph.connect_egde(23, 24)
-                    pygame.draw.rect(screen, RED, [485, 376, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            #horizontal sixty line
-
-            if mx >= 262 and mx <= 315 and my >= 452 and my <= 470:
-                if not graph.is_connected(25, 26):
-                    graph.connect_egde(25, 26)
-                    pygame.draw.rect(screen, RED, [260, 460, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 337 and mx <= 390 and my >= 452 and my <= 470:
-                if not graph.is_connected(26, 27):
-                    graph.connect_egde(26, 27)
-                    pygame.draw.rect(screen, RED, [335, 460, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 412 and mx <= 465 and my >= 452 and my <= 470:
-                if not graph.is_connected(27, 28):
-                    graph.connect_egde(27, 28)
-                    pygame.draw.rect(screen, RED, [410, 460, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 487 and mx <= 540 and my >= 452 and my <= 470:
-                if not graph.is_connected(28, 29):
-                    graph.connect_egde(28, 29)
-                    pygame.draw.rect(screen, RED, [485, 460, 60, 5])
-                else:
-                    print('ja esta conectado')
-                    continue  
-
-            #vertical first column
-
-            if mx >= 244 and mx <= 262 and my >= 50 and my <= 117:
-                if not graph.is_connected(0, 5):
-                    graph.connect_egde(0, 5)
-                    pygame.draw.rect(screen, RED, [251, 50, 5, 70])   
-                else:
-                    print('ja esta conectado')
-                    continue        
-            elif mx >= 244 and mx <= 262 and my >= 134 and my <= 201:
-                if not graph.is_connected(5, 10):
-                    graph.connect_egde(5, 10)
-                    pygame.draw.rect(screen, RED, [251, 134, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 244 and mx <= 262 and my >= 218 and my <= 285:
-                if not graph.is_connected(10, 15):
-                    graph.connect_egde(10, 15)
-                    pygame.draw.rect(screen, RED, [251, 218, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 244 and mx <= 262 and my >= 302 and my <= 369:
-                if not graph.is_connected(15, 20):
-                    graph.connect_egde(15, 20)
-                    pygame.draw.rect(screen, RED, [251, 302, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 244 and mx <= 262 and my >= 386 and my <= 453:
-                if not graph.is_connected(20, 25):
-                    graph.connect_egde(20, 25)
-                    pygame.draw.rect(screen, RED, [251, 386, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-
-            #vertical second line
-
-            if mx >= 318 and mx <= 336 and my >= 50 and my <= 117:
-                if not graph.is_connected(1, 6):
-                    graph.connect_egde(1, 6)
-                    pygame.draw.rect(screen, RED, [326, 50, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 318 and mx <= 336 and my >= 134 and my <= 201:
-                if not graph.is_connected(6, 11):
-                    graph.connect_egde(6, 11)
-                    pygame.draw.rect(screen, RED, [326, 134, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 318 and mx <= 336 and my >= 218 and my <= 285:
-                if not graph.is_connected(11, 16):
-                    graph.connect_egde(11, 16)
-                    pygame.draw.rect(screen, RED, [326, 218, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 318 and mx <= 336 and my >= 302 and my <= 369:
-                if not graph.is_connected(16, 21):
-                    graph.connect_egde(16, 21)
-                    pygame.draw.rect(screen, RED, [326, 302, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 318 and mx <= 336 and my >= 386 and my <= 453:
-                if not graph.is_connected(21, 26):
-                    graph.connect_egde(21, 26)
-                    pygame.draw.rect(screen, RED, [326, 386, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-
-
-            #vertical third line
-
-            if mx >= 393 and mx <= 411 and my >= 50 and my <= 117:
-                if not graph.is_connected(2, 7):
-                    graph.connect_egde(2, 7)
-                    pygame.draw.rect(screen, RED, [401, 50, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 393 and mx <= 411 and my >= 134 and my <= 201:
-                if not graph.is_connected(7, 12):
-                    graph.connect_egde(7, 12)
-                    pygame.draw.rect(screen, RED, [401, 134, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 393 and mx <= 411 and my >= 218 and my <= 285:
-                if not graph.is_connected(12, 17):
-                    graph.connect_egde(12, 17)
-                    pygame.draw.rect(screen, RED, [401, 218, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 393 and mx <= 411 and my >= 302 and my <= 369:
-                if not graph.is_connected(17, 22):
-                    graph.connect_egde(17, 22)
-                    pygame.draw.rect(screen, RED, [401, 302, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 393 and mx <= 411 and my >= 386 and my <= 453:
-                if not graph.is_connected(22, 27):
-                    graph.connect_egde(22, 27)
-                    pygame.draw.rect(screen, RED, [401, 386, 5, 70])
-
-
-            #vertical fourty line
-
-            if mx >= 468 and mx <= 486 and my >= 50 and my <= 117:
-                if not graph.is_connected(3, 8):
-                    graph.connect_egde(3, 8)
-                    pygame.draw.rect(screen, RED, [476, 50, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 468 and mx <= 486 and my >= 134 and my <= 201:
-                if not graph.is_connected(8, 13):
-                    graph.connect_egde(8, 13)
-                    pygame.draw.rect(screen, RED, [476, 134, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 468 and mx <= 486 and my >= 218 and my <= 285:
-                if not graph.is_connected(13, 18):
-                    graph.connect_egde(13, 18)
-                    pygame.draw.rect(screen, RED, [476, 218, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 468 and mx <= 486 and my >= 302 and my <= 369:
-                if not graph.is_connected(18, 23):
-                    graph.connect_egde(18, 23)
-                    pygame.draw.rect(screen, RED, [476, 302, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 468 and mx <= 486 and my >= 386 and my <= 453:
-                if not graph.is_connected(23, 28):
-                    graph.connect_egde(23, 28)
-                    pygame.draw.rect(screen, RED, [476, 386, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-
-            
-            #vertical fifty line
-
-            if mx >= 543 and mx <= 561 and my >= 50 and my <= 117:
-                if not graph.is_connected(4, 9):
-                    graph.connect_egde(4, 9)
-                    pygame.draw.rect(screen, RED, [551, 50, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 543 and mx <= 561 and my >= 134 and my <= 201:
-                if not graph.is_connected(9, 14):
-                    graph.connect_egde(9, 14)
-                    pygame.draw.rect(screen, RED, [551, 134, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 543 and mx <= 561 and my >= 218 and my <= 285:
-                if not graph.is_connected(14, 19):
-                    graph.connect_egde(14, 19)
-                    pygame.draw.rect(screen, RED, [551, 218, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 543 and mx <= 561 and my >= 302 and my <= 369:
-                if not graph.is_connected(19, 24):
-                    graph.connect_egde(19, 24)
-                    pygame.draw.rect(screen, RED, [551, 302, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-            elif mx >= 543 and mx <= 561 and my >= 386 and my <= 453:
-                if not graph.is_connected(24, 29):
-                    graph.connect_egde(24, 29)
-                    pygame.draw.rect(screen, RED, [551, 386, 5, 70])
-                else:
-                    print('ja esta conectado')
-                    continue  
-
-
-            #time.sleep(3)
-          
-            while True:
-                play = bot.machine_action_easy(graph.get_vertexs())
-                print(play['vertexs'][0], ' **-> ', play['vertexs'][1])
-                if graph.is_connected(play['vertexs'][0], play['vertexs'][1]):
-                    continue
-                else:
-                    graph.connect_egde(play['vertexs'][0], play['vertexs'][1])
-                    collor(play)
-                    break
+                
+                    # print(x_r)
+                    # print(y_r)
+                    # print(x_d)
+                    # print(y_d)
                     
 
-    
-    
-    # atualizando a tela
-    #
+                elif mx >= x_d+150 and mx <= x_d+150+5 and my >= y_d+50 and my<= y_d+50+60:
+                    if graph.is_connected(vertex['value'], vertex['value'] + graph.get_columns()):
+                        print('repeat')
+                        repeat = True
+                        break
+                    repeat = False
+                    pygame.draw.rect(screen, BLUE ,[x_d+150, y_d+50, 5, 70])
+                    # if vertex['value'] != graph.get_lines() - 1:
+                    graph.connect_egde(vertex['value'], vertex['value'] + graph.get_columns())
+                    bots_turn = True
+                    #print(vertex)
+                    # print(x_r)
+                    # print(y_r)
+                    # print(x_d)
+                    # print(y_d)
+
+                #se o usuario clicou no lugar errado vai repetir o clique
+               
+            # print '\n' * 40
+            #graph.print_graph()
+            #se o usuario marcou uma aresta ja conectada a maquina nao vai jogar e o usuario repete
+            if repeat:
+                continue
+            
+
+
+          #parte em que o algoritmo joga
+            if bots_turn:
+                while True:
+                    #recebe as coordenadas da jogada
+                    play = bot.machine_action_easy(graph.get_vertexs())
+                    
+                    if play['orientation'] == 'horizontal':
+                        a = play['vertex']
+                        if a == 4 or a == 9 or a == 14 or a == 19:
+                            continue
+                        if not graph.is_connected(play['vertex'], play['vertex'] + 1):
+                            graph.connect_egde(play['vertex'], play['vertex'] + 1)
+                            print '(', play['vertex'], ') (', play['vertex'] + 1, ')'
+                            collor(play)
+                        else:
+                            print('finding another edge')
+                            print '(', play['vertex'], ') (', play['vertex'] + 1, ')'
+                            continue
+                    else:
+                        a = play['vertex']
+                        if a == 20 or a == 21 or a == 22 or a == 23 or a == 24:
+                            continue
+                        if not graph.is_connected(play['vertex'], play['vertex'] + graph.get_columns()):
+                            graph.connect_egde(play['vertex'], play['vertex'] + graph.get_columns())
+                            print '(', play['vertex'], ') (', play['vertex'] + graph.get_columns() , ')'
+                            collor(play)
+                        else:
+                            print('finding another edge')
+                            print '(', play['vertex'], ') (', play['vertex'] + 1, ')'
+                            continue
+
+                    #print(play['axis'][0], ' **-> ', play['axis'][1])
+                    
+                    break
+                
+                    
+
     pygame.display.update()
     pygame.display.flip()
     frame.tick(25)
 
 
-    # preenchendo o fundo com preto
-    
-
-    # atualizando a tela
     
