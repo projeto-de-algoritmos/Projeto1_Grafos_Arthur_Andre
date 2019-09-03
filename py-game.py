@@ -61,12 +61,12 @@ def collor(aux):
     if aux['orientation'] == 'horizontal':
         x = aux['axis'][0]
         y = aux['axis'][1]
-        pygame.draw.rect(screen, RED ,[x+160, y+40, 70,5])
+        pygame.draw.rect(screen, RED ,[x+160, y+40, 60,5])
     
     else:
         x = aux['axis'][0]
         y = aux['axis'][1]
-        pygame.draw.rect(screen, RED ,[x+150, y+50, 5, 60])
+        pygame.draw.rect(screen, RED ,[x+150, y+50, 5, 70])
 
 
     
@@ -103,7 +103,7 @@ while sair:
                     #print(vertex)
                     #aqui verifica se o vertice em questao é o ultimo da direita, se nao for o ultimo ainda tem um vertice a direita onde pode ser conectado
                     # if vertex['value'] != graph.get_columns() - 1:
-                    graph.connect_egde(vertex['value'], vertex['value'] + 1)
+                    graph.connect_egde(vertex['value'], vertex['value'] + 1, 'horizontal')
                     pygame.draw.rect(screen, BLUE ,[x_r+160, y_d+40, 60,5])
                     bots_turn = True
                 
@@ -122,7 +122,7 @@ while sair:
                     repeat = False
                     pygame.draw.rect(screen, BLUE ,[x_d+150, y_d+50, 5, 70])
                     # if vertex['value'] != graph.get_lines() - 1:
-                    graph.connect_egde(vertex['value'], vertex['value'] + graph.get_columns())
+                    graph.connect_egde(vertex['value'], vertex['value'] + graph.get_columns(), 'vertical')
                     bots_turn = True
                     #print(vertex)
                     # print(x_r)
@@ -137,21 +137,20 @@ while sair:
             #se o usuario marcou uma aresta ja conectada a maquina nao vai jogar e o usuario repete
             if repeat:
                 continue
-            
-
 
           #parte em que o algoritmo joga
             if bots_turn:
+                
                 while True:
                     #recebe as coordenadas da jogada
                     play = bot.machine_action_easy(graph.get_vertexs())
                     
                     if play['orientation'] == 'horizontal':
                         a = play['vertex']
-                        if a == 4 or a == 9 or a == 14 or a == 19:
+                        if a == 4 or a == 9 or a == 14 or a == 19 or a == 24:
                             continue
                         if not graph.is_connected(play['vertex'], play['vertex'] + 1):
-                            graph.connect_egde(play['vertex'], play['vertex'] + 1)
+                            graph.connect_egde(play['vertex'], play['vertex'] + 1, 'horizontal')
                             print '(', play['vertex'], ') (', play['vertex'] + 1, ')'
                             collor(play)
                         else:
@@ -163,7 +162,7 @@ while sair:
                         if a == 20 or a == 21 or a == 22 or a == 23 or a == 24:
                             continue
                         if not graph.is_connected(play['vertex'], play['vertex'] + graph.get_columns()):
-                            graph.connect_egde(play['vertex'], play['vertex'] + graph.get_columns())
+                            graph.connect_egde(play['vertex'], play['vertex'] + graph.get_columns(), 'vertical')
                             print '(', play['vertex'], ') (', play['vertex'] + graph.get_columns() , ')'
                             collor(play)
                         else:

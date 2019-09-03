@@ -24,7 +24,7 @@ class Graph:
             vertex = {
                     'value': i,
                     'neighbors': [],
-                    'clicked': False,
+                    'clicked': {'left': 0, 'up': 0, 'down': 0, 'right': 0},
                     'axis':{'right': [], 'down': []}
                 }
             self.vertexs.append(vertex)
@@ -48,9 +48,16 @@ class Graph:
                 self.index = self.index + 1
 
 
-    def connect_egde(self, origin, destiny): #graph bidirected 
+    def connect_egde(self, origin, destiny, orientation): #graph bidirected 
         self.vertexs[origin]['neighbors'].append(destiny)
         self.vertexs[destiny]['neighbors'].append(origin)
+        if orientation == 'horizontal':
+            self.vertexs[origin]['clicked']['right'] = 1
+            self.vertexs[destiny]['clicked']['left'] = 1
+        else:
+            self.vertexs[origin]['clicked']['down'] = 1
+            self.vertexs[destiny]['clicked']['up'] = 1
+
         self.plays = self.plays + 1
     
     def get_vertexs(self):
@@ -124,35 +131,16 @@ class Game:
         return self.plays[random]
 
 
-    def bfs(self):
-        pass
+    def dfs(self, graph, start):
+        visited, stack = set(), [start]
+        while stack:
+            vertex = stack.pop()
+            if vertex not in visited:
+                visited.add(vertex)
+                stack.extend(graph[vertex] - visited)
+        return visited
 
-
-    def search_edge(self, graph):
-        pass
 
     def is_finish(self):
+        pass
         
-
-
-
-
-
-
-
-
-
-
-
-# grafo = Graph()
-# grafo.create(5, 4, [])
-# grafo.print_grid()
-# grafo.connect_egde(4, 5)
-# grafo.connect_egde(4, 3)
-# grafo.connect_egde(4, 8)
-# grafo.connect_egde(8, 3)
-
-# grafo.print_list()
-
-# g = Game()
-# g.machine_action_easy(grafo.get_vertex())
