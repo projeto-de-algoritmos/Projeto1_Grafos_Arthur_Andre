@@ -25,7 +25,7 @@ class Graph:
                     'value': i,
                     'neighbors': [],
                     'clicked': {'left': 0, 'up': 0, 'down': 0, 'right': 0},
-                    'axis':{'right': [], 'down': []}
+                    'axis':{'right': {'list': [], 'clicked': 0}, 'down': {'list': [], 'clicked': 0}}
                 }
             self.vertexs.append(vertex)
         
@@ -33,8 +33,8 @@ class Graph:
 
         for y in range(0,lines*84,84):
             for x in range(0,columns*75,75):
-                self.vertexs[self.index]['axis']['right'].append(x)
-                self.vertexs[self.index]['axis']['right'].append(y)
+                self.vertexs[self.index]['axis']['right']['list'].append(x)
+                self.vertexs[self.index]['axis']['right']['list'].append(y)
 
                 self.index = self.index + 1
                 
@@ -42,8 +42,8 @@ class Graph:
         self.index = 0
         for x in range(0,columns*84,84):  
             for y in range(0,lines*75,75):
-                self.vertexs[self.index]['axis']['down'].append(y)
-                self.vertexs[self.index]['axis']['down'].append(x)
+                self.vertexs[self.index]['axis']['down']['list'].append(y)
+                self.vertexs[self.index]['axis']['down']['list'].append(x)
 
                 self.index = self.index + 1
 
@@ -112,7 +112,7 @@ class Game:
             play = {
                 'vertex': vertex['value'],
                 'orientation': 'horizontal',
-                'axis': vertex['axis']['right']
+                'axis': vertex['axis']['right']['list']
             }
             self.plays.append(play)
            
@@ -120,7 +120,7 @@ class Game:
             play = {
                 'vertex': vertex['value'],
                 'orientation': 'vertical',
-                'axis': vertex['axis']['down']
+                'axis': vertex['axis']['down']['list']
             }
             self.plays.append(play)
 
@@ -130,7 +130,7 @@ class Game:
 
         return self.plays[random]
 
-
+#funcao tirada de: https://eddmann.com/posts/depth-first-search-and-breadth-first-search-in-python/
     def dfs(self, graph, start):
         visited, stack = set(), [start]
         while stack:
@@ -139,8 +139,9 @@ class Game:
                 visited.add(vertex)
                 stack.extend(graph[vertex] - visited)
         return visited
+###
 
-
-    def is_finish(self):
+    def points(self, vertexs):
+        if
         pass
         
