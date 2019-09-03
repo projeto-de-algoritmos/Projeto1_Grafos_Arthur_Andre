@@ -1,5 +1,6 @@
 # Projeto 1 Grafos
 
+Tentativa de implementação do jogo Dotes & Boxes
 
 Alunos:
 
@@ -13,3 +14,8 @@ Para instalar em sistemas linux baseados em debian você precisa instalar antes 
 $ sudo apt-get build-dep python-pygame
 
 $ sudo pip install pygame
+
+Para rodar
+
+$ python py-game.py
+
